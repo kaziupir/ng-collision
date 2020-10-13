@@ -1,8 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
+
+export class AngularCollisionConfig {}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AngularCollisionService {
-  constructor() {}
+  constructor(@Optional() config?: AngularCollisionConfig) {}
 }

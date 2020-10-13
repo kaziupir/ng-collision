@@ -1,9 +1,18 @@
-import { NgModule } from '@angular/core';
-import { AngularCollisionComponent } from './angular-collision.component';
+import { NgModule, ModuleWithProviders } from '@angular/core';
+import { AngularCollisionDirective } from './angular-collision.directive';
+import { AngularCollisionConfig } from './angular-collision.service';
 
 @NgModule({
-  declarations: [AngularCollisionComponent],
-  imports: [],
-  exports: [AngularCollisionComponent],
+  declarations: [AngularCollisionDirective],
+  exports: [AngularCollisionDirective],
 })
-export class AngularCollisionModule {}
+export class AngularCollisionModule {
+  static forRoot(
+    config: AngularCollisionConfig
+  ): ModuleWithProviders<AngularCollisionModule> {
+    return {
+      ngModule: AngularCollisionModule,
+      providers: [{ provide: AngularCollisionConfig, useValue: config }],
+    };
+  }
+}

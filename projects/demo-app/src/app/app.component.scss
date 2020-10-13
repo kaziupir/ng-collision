@@ -1,0 +1,19 @@
+.rect {
+  width: 150px;
+  height: 150px;
+  border: 2px solid black;
+  position: relative;
+
+  &__one {
+    background-color: #fee;
+    z-index: 2;
+    top: 50px;
+    left: 50px;
+  }
+
+  &__two {
+    background-color: #cde;
+    top: 150px;
+    left: 150px;
+  }
+}
