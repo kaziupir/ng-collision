@@ -1,2 +1,48 @@
-<div class="rect rect__one" cdkDrag></div>
-<div class="rect rect__two"></div>
+<!--  TODO use ngFor -->
+<div
+  class="rect rect__one"
+  cdkDrag
+  ngcAngularCollision
+  (rectChange)="handleRectChange($event, rectangles[0].name)"
+>
+  <span>Drag me</span>
+  <ng-container
+    *ngTemplateOutlet="
+      positionTemplate;
+      context: { $implicit: rectangles[0].position }
+    "
+  ></ng-container>
+</div>
+<div
+  class="rect rect__two"
+  cdkDrag
+  ngcAngularCollision
+  (rectChange)="handleRectChange($event, rectangles[1].name)"
+>
+  <ng-container
+    *ngTemplateOutlet="
+      positionTemplate;
+      context: { $implicit: rectangles[1].position }
+    "
+  ></ng-container>
+</div>
+<div
+  class="rect rect__three"
+  cdkDrag
+  ngcAngularCollision
+  (rectChange)="handleRectChange($event, rectangles[2].name)"
+>
+  <ng-container
+    *ngTemplateOutlet="
+      positionTemplate;
+      context: { $implicit: rectangles[2].position }
+    "
+  ></ng-container>
+</div>
+
+<ng-template #positionTemplate let-position>
+  <div *ngIf="position">
+    <div>X: {{ position.x | number: '1.0-0' }}px</div>
+    <div>Y: {{ position.y | number: '1.0-0' }}px</div>
+  </div>
+</ng-template>
