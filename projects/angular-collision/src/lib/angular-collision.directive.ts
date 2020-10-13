@@ -17,7 +17,8 @@ export class AngularCollisionDirective
   implements OnInit, AfterContentChecked, OnDestroy {
   @Input() public disableInterval: boolean; // TODO add to config
   @Input() public intervalTime: number = 100; // TODO add to config
-  @Output() public rectChange: EventEmitter<DOMRect> = new EventEmitter();
+
+  @Output() public rectangleChange: EventEmitter<DOMRect> = new EventEmitter();
 
   private timerSubscription: Subscription;
 
@@ -42,6 +43,8 @@ export class AngularCollisionDirective
   }
 
   public checkPosition(): void {
-    this.rectChange.emit(this.element.nativeElement.getBoundingClientRect());
+    this.rectangleChange.emit(
+      this.element.nativeElement.getBoundingClientRect()
+    );
   }
 }

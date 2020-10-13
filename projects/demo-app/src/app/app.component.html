@@ -1,41 +1,15 @@
-<!--  TODO use ngFor -->
 <div
-  class="rect rect__one"
+  *ngFor="let rectangle of rectangles"
+  class="rect rect__{{ rectangle.name }}"
   cdkDrag
   ngcAngularCollision
-  (rectChange)="handleRectChange($event, rectangles[0].name)"
+  (rectangleChange)="handleRectChange($event, rectangle.name)"
 >
   <span>Drag me</span>
   <ng-container
     *ngTemplateOutlet="
       positionTemplate;
-      context: { $implicit: rectangles[0].position }
-    "
-  ></ng-container>
-</div>
-<div
-  class="rect rect__two"
-  cdkDrag
-  ngcAngularCollision
-  (rectChange)="handleRectChange($event, rectangles[1].name)"
->
-  <ng-container
-    *ngTemplateOutlet="
-      positionTemplate;
-      context: { $implicit: rectangles[1].position }
-    "
-  ></ng-container>
-</div>
-<div
-  class="rect rect__three"
-  cdkDrag
-  ngcAngularCollision
-  (rectChange)="handleRectChange($event, rectangles[2].name)"
->
-  <ng-container
-    *ngTemplateOutlet="
-      positionTemplate;
-      context: { $implicit: rectangles[2].position }
+      context: { $implicit: rectangle.position }
     "
   ></ng-container>
 </div>

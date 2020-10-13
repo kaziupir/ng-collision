@@ -39,6 +39,5 @@ export class AppComponent {
     this.rectangles.find(
       (rectangle) => rectangle.name === rectangleName
     ).position = position;
-    console.log(this.rectangles);
   }
 }
