@@ -1,4 +1,11 @@
-import { Component } from '@angular/core';
+import {
+  Component,
+  ViewChildren,
+  QueryList,
+  AfterViewInit,
+} from '@angular/core';
+import { AngularCollisionService } from 'projects/angular-collision/src/lib/angular-collision.service';
+import { AngularCollisionDirective } from 'projects/angular-collision/src/lib/angular-collision.directive';
 
 interface Rectangle {
   name: RectanglesEnum;
@@ -16,7 +23,11 @@ enum RectanglesEnum {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+  @ViewChildren(AngularCollisionDirective) elements: QueryList<
+    AngularCollisionDirective
+  >;
+
   public rectangles: Rectangle[] = [
     {
       name: RectanglesEnum.ONE,
@@ -31,6 +42,12 @@ export class AppComponent {
       position: null,
     },
   ];
+
+  constructor(public service: AngularCollisionService) {}
+
+  public ngAfterViewInit(): void {
+    this.service.register(this.elements);
+  }
 
   public handleRectChange(
     position: DOMRect,

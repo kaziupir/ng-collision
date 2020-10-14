@@ -1,3 +1,7 @@
+:host {
+  text-align: center;
+}
+
 .rect {
   width: 150px;
   height: 150px;
@@ -10,6 +14,7 @@
   justify-content: space-evenly;
   align-items: center;
   font-weight: 600;
+  box-sizing: border-box;
 
   &__one {
     background-color: #fee;
@@ -44,11 +49,11 @@
   }
   50% {
     left: 400px;
-    top: 400px;
+    top: 350px;
   }
   75% {
     left: 100px;
-    top: 400px;
+    top: 350px;
   }
   100% {
     left: 100px;
