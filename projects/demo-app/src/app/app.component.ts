@@ -5,7 +5,10 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { AngularCollisionService } from 'projects/angular-collision/src/lib/angular-collision.service';
-import { AngularCollisionDirective } from 'projects/angular-collision/src/lib/angular-collision.directive';
+import {
+  AngularCollisionDirective,
+  NgcElementChange,
+} from 'projects/angular-collision/src/lib/angular-collision.directive';
 
 interface Rectangle {
   name: RectanglesEnum;
@@ -50,11 +53,11 @@ export class AppComponent implements AfterViewInit {
   }
 
   public handleRectChange(
-    position: DOMRect,
+    position: NgcElementChange,
     rectangleName: RectanglesEnum
   ): void {
     this.rectangles.find(
       (rectangle) => rectangle.name === rectangleName
-    ).position = position;
+    ).position = position.domRect;
   }
 }

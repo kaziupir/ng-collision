@@ -1,16 +1,24 @@
 import { Injectable, Optional, QueryList } from '@angular/core';
 import { AngularCollisionDirective } from './angular-collision.directive';
 
-export class AngularCollisionConfig {}
+export class NgcConfig {}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AngularCollisionService {
+  /**
+   *  Tracked elements ids
+   */
   public trackedElements: number[] = [];
 
-  constructor(@Optional() config?: AngularCollisionConfig) {}
+  constructor(@Optional() config?: NgcConfig) {}
 
+  /**
+   * Start tracking element / elements
+   *
+   * @param elements
+   */
   public register(
     elements:
       | QueryList<AngularCollisionDirective>
@@ -19,15 +27,18 @@ export class AngularCollisionService {
   ): void {
     if (Array.isArray(elements) || elements instanceof QueryList) {
       elements.forEach((element) => {
-        element.startTracking();
         this.addTrackedElement(element);
       });
     } else {
-      elements.startTracking();
       this.addTrackedElement(elements);
     }
   }
 
+  /**
+   * Stop tracking element / elements
+   *
+   * @param elements
+   */
   public remove(
     elements:
       | QueryList<AngularCollisionDirective>
@@ -36,22 +47,22 @@ export class AngularCollisionService {
   ): void {
     if (Array.isArray(elements) || elements instanceof QueryList) {
       elements.forEach((element) => {
-        element.stopTracking();
         this.removeTrackedElement(element);
       });
     } else {
-      elements.stopTracking();
       this.removeTrackedElement(elements);
     }
   }
 
-  public addTrackedElement(element: AngularCollisionDirective): void {
+  private addTrackedElement(element: AngularCollisionDirective): void {
     if (!this.trackedElements.includes(element.id)) {
+      element.startTracking();
       this.trackedElements.push(element.id);
     }
   }
 
-  public removeTrackedElement(element: AngularCollisionDirective): void {
+  private removeTrackedElement(element: AngularCollisionDirective): void {
+    element.stopTracking();
     this.trackedElements = this.trackedElements.filter(
       (trackedElement) => trackedElement !== element.id
     );

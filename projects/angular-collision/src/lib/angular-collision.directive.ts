@@ -11,6 +11,11 @@ import {
 } from '@angular/core';
 import { timer, Subscription, Subject } from 'rxjs';
 
+export interface NgcElementChange {
+  id: number;
+  domRect: DOMRect;
+}
+
 @Directive({
   selector: '[ngcAngularCollision]',
   exportAs: 'ngcAngularCollision',
@@ -21,12 +26,12 @@ export class AngularCollisionDirective
   @Input() public intervalTime: number = 100; // TODO add to config
   @Input() public customEvents: string[];
 
-  @Output() public rectangleChange: EventEmitter<DOMRect> = new EventEmitter();
+  @Output() public rectangleChange: EventEmitter<NgcElementChange> = new EventEmitter();
 
   @HostBinding('class.collision') public collisionActive: boolean;
 
-  public rectangleChange$: Subject<DOMRect> = new Subject();
-  public destroy$: Subject<void> = new Subject();
+  public rectangleChange$: Subject<NgcElementChange> = new Subject();
+  public destroy$: Subject<number> = new Subject();
   public id: number;
 
   private timerSubscription: Subscription;
@@ -47,7 +52,7 @@ export class AngularCollisionDirective
 
   public ngOnDestroy(): void {
     this.unsubscribe();
-    this.destroy$.next();
+    this.destroy$.next(this.id);
   }
 
   public updateCollisionState(collisionActive: boolean): void {
@@ -55,10 +60,10 @@ export class AngularCollisionDirective
   }
 
   public checkPosition(): void {
-    const boundingRect: DOMRect = this.element.nativeElement.getBoundingClientRect();
+    const domRect: DOMRect = this.element.nativeElement.getBoundingClientRect();
 
-    this.rectangleChange$.next(boundingRect);
-    this.rectangleChange.emit(boundingRect);
+    this.rectangleChange$.next({domRect, id: this.id});
+    this.rectangleChange.emit({domRect, id: this.id});
   }
 
   public startTracking(): void {
