@@ -8,6 +8,8 @@
 
 `ng serve demo-app`
 
+Drag & drop made with [angular/cdk](https://material.angular.io/cdk/drag-drop/overview).
+
 ### Generate docs
 
 Documentation is auto-generated every commit.
