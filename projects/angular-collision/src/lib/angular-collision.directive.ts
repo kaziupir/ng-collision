@@ -4,16 +4,23 @@ import {
   ElementRef,
   Output,
   EventEmitter,
-  OnInit,
   OnDestroy,
   Input,
   HostBinding,
 } from '@angular/core';
 import { timer, Subscription, Subject } from 'rxjs';
 
+// TODO: move to files
 export interface NgcElementChange {
-  id: number;
   domRect: DOMRect;
+  element: AngularCollisionDirective;
+}
+
+// TODO: move to files
+export interface NgcCollisionChange {
+  id: number;
+  active: boolean;
+  collidedIds: number[];
 }
 
 @Directive({
@@ -21,12 +28,17 @@ export interface NgcElementChange {
   exportAs: 'ngcAngularCollision',
 })
 export class AngularCollisionDirective
-  implements OnInit, AfterContentChecked, OnDestroy {
+  implements AfterContentChecked, OnDestroy {
   @Input() public disableInterval: boolean; // TODO add to config
   @Input() public intervalTime: number = 100; // TODO add to config
   @Input() public customEvents: string[];
 
-  @Output() public rectangleChange: EventEmitter<NgcElementChange> = new EventEmitter();
+  @Output() public rectangleChange: EventEmitter<
+    NgcElementChange
+  > = new EventEmitter();
+  @Output() public collisionActiveChange: EventEmitter<
+    NgcCollisionChange
+  > = new EventEmitter();
 
   @HostBinding('class.collision') public collisionActive: boolean;
 
@@ -42,8 +54,6 @@ export class AngularCollisionDirective
     this.id = AngularCollisionDirective.uid++;
   }
 
-  public ngOnInit(): void {}
-
   public ngAfterContentChecked(): void {
     if (this.active) {
       this.checkPosition();
@@ -55,17 +65,30 @@ export class AngularCollisionDirective
     this.destroy$.next(this.id);
   }
 
-  public updateCollisionState(collisionActive: boolean): void {
-    this.collisionActive = collisionActive;
+  /**
+   * Update collision status
+   *
+   * @param active
+   * @param collidedIds
+   */
+  public updateCollisionState(active: boolean, collidedIds: number[]): void {
+    this.collisionActive = active;
+    this.collisionActiveChange.emit({ id: this.id, active, collidedIds });
   }
 
+  /**
+   * Check and emit element position
+   */
   public checkPosition(): void {
     const domRect: DOMRect = this.element.nativeElement.getBoundingClientRect();
 
-    this.rectangleChange$.next({domRect, id: this.id});
-    this.rectangleChange.emit({domRect, id: this.id});
+    this.rectangleChange$.next({ domRect, element: this });
+    this.rectangleChange.emit({ domRect, element: this });
   }
 
+  /**
+   * Start tracking element
+   */
   public startTracking(): void {
     this.active = true;
 
@@ -76,13 +99,20 @@ export class AngularCollisionDirective
     }
   }
 
+  /**
+   * Stop tracking element
+   */
   public stopTracking(): void {
     this.active = false;
+    this.updateCollisionState(false, []);
     this.unsubscribe();
   }
 
+  /**
+   * Unsubscribe timer observable
+   */
   public unsubscribe(): void {
-    if (!this.timerSubscription.closed) {
+    if (this.timerSubscription && !this.timerSubscription.closed) {
       this.timerSubscription.unsubscribe();
     }
   }
