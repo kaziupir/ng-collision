@@ -1,0 +1,316 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ng-collision documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	      <link rel="stylesheet" href="../styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="../" class="navbar-brand">ng-collision documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content class">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li>Classes</li>
+  <li>NgcConfig</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="active">
+            <a href="#info" role="tab" id="info-tab" data-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li >
+            <a href="#source" role="tab" id="source-tab" data-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="c-info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>projects/angular-collision/src/lib/angular-collision.service.ts</code>
+        </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="c-source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, OnDestroy, Optional, QueryList } from &#x27;@angular/core&#x27;;
+import { takeUntil, throttleTime } from &#x27;rxjs/operators&#x27;;
+import { Subject, Subscription } from &#x27;rxjs&#x27;;
+import {
+  AngularCollisionDirective,
+  NgcElementChange,
+} from &#x27;./angular-collision.directive&#x27;;
+
+export class NgcConfig {}
+
+export interface NgcTrackedElement {
+  id: number;
+  subscription: Subscription;
+}
+
+@Injectable({
+  providedIn: &#x27;root&#x27;,
+})
+export class AngularCollisionService implements OnDestroy {
+  /**
+   *  Tracked elements ids
+   */
+  public trackedElements: NgcTrackedElement[] &#x3D; [];
+
+  /**
+   *  Map of tracked elements positions
+   */
+  public trackedElementsPositions: Map&lt;number, NgcElementChange&gt; &#x3D; new Map();
+
+  /**
+   *  Observable wrapper of tracked elements positions
+   */
+  public trackedElementsPositions$: Subject&lt;
+    Map&lt;number, NgcElementChange&gt;
+  &gt; &#x3D; new Subject();
+
+  public trackedElementsPositionSubscription: Subscription;
+
+  constructor(@Optional() config?: NgcConfig) {
+    this.trackedElementsPositionSubscription &#x3D; this.trackedElementsPositions$
+      .pipe(throttleTime(100))
+      .subscribe((elementsMap: Map&lt;number, NgcElementChange&gt;) &#x3D;&gt; {
+        // TODO work on performance
+        elementsMap.forEach((element: NgcElementChange, id: number) &#x3D;&gt; {
+          const collisions: AngularCollisionDirective[] &#x3D; [];
+
+          elementsMap.forEach(
+            (innerElement: NgcElementChange, innerId: number) &#x3D;&gt; {
+              if (
+                id !&#x3D;&#x3D; innerId &amp;&amp;
+                this.checkElementsCollision(
+                  element.domRect,
+                  innerElement.domRect
+                )
+              ) {
+                collisions.push(innerElement.element);
+              }
+            }
+          );
+
+          element.element.updateCollisionState(
+            collisions.length &gt; 0,
+            collisions
+          );
+        });
+      });
+  }
+
+  public ngOnDestroy(): void {
+    if (!this.trackedElementsPositionSubscription.closed) {
+      this.trackedElementsPositionSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * Start tracking element / elements
+   *
+   * @param elements
+   */
+  public register(
+    elements:
+      | QueryList&lt;AngularCollisionDirective&gt;
+      | AngularCollisionDirective
+      | AngularCollisionDirective[]
+  ): void {
+    if (Array.isArray(elements) || elements instanceof QueryList) {
+      elements.forEach((element) &#x3D;&gt; {
+        this.addTrackedElement(element);
+      });
+    } else {
+      this.addTrackedElement(elements);
+    }
+  }
+
+  /**
+   * Stop tracking element / elements
+   *
+   * @param elements
+   */
+  public remove(
+    elements:
+      | QueryList&lt;AngularCollisionDirective&gt;
+      | AngularCollisionDirective
+      | AngularCollisionDirective[]
+  ): void {
+    if (Array.isArray(elements) || elements instanceof QueryList) {
+      elements.forEach((element) &#x3D;&gt; {
+        this.removeTrackedElement(element);
+      });
+    } else {
+      this.removeTrackedElement(elements);
+    }
+  }
+
+  /**
+   * Checks collisions between two elements
+   *
+   * @param first
+   * @param second
+   */
+  private checkElementsCollision(first: DOMRect, second: DOMRect): boolean {
+    return (
+      ((first.top &lt;&#x3D; second.bottom &amp;&amp; first.top &gt;&#x3D; second.top) ||
+        (first.bottom &lt;&#x3D; second.bottom &amp;&amp; first.bottom &gt;&#x3D; second.top) ||
+        (first.top &lt;&#x3D; second.top &amp;&amp; first.bottom &gt;&#x3D; second.bottom)) &amp;&amp;
+      ((first.left &gt;&#x3D; second.left &amp;&amp; first.left &lt;&#x3D; second.right) ||
+        (first.right &lt;&#x3D; second.right &amp;&amp; first.right &gt;&#x3D; second.left) ||
+        (first.left &lt;&#x3D; second.left &amp;&amp; first.right &gt;&#x3D; second.right))
+    );
+  }
+
+  /**
+   * Init tracking of element
+   *
+   * @param element
+   */
+  private addTrackedElement(element: AngularCollisionDirective): void {
+    if (!this.trackedElements.some((el) &#x3D;&gt; el.id &#x3D;&#x3D; element.id)) {
+      element.startTracking();
+      const subscription &#x3D; element.rectangleChange$
+        .pipe(takeUntil(element.destroy$))
+        .subscribe((change: NgcElementChange) &#x3D;&gt; {
+          this.trackedElementsPositions.set(change.element.id, change);
+          this.trackedElementsPositions$.next(this.trackedElementsPositions);
+        });
+      this.trackedElements.push({ id: element.id, subscription });
+    }
+  }
+
+  /**
+   * Finish tracking of element
+   *
+   * @param element
+   */
+  private removeTrackedElement(element: AngularCollisionDirective): void {
+    element.stopTracking();
+
+    this.trackedElementsPositions.delete(element.id);
+    this.trackedElementsPositions$.next(this.trackedElementsPositions);
+
+    const foundElement &#x3D; this.trackedElements.find(
+      (trackedElement) &#x3D;&gt; trackedElement.id &#x3D;&#x3D;&#x3D; element.id
+    );
+
+    if (foundElement?.subscription &amp;&amp; !foundElement.subscription.closed) {
+      foundElement.subscription.unsubscribe();
+    }
+
+    this.trackedElements &#x3D; this.trackedElements.filter(
+      (trackedElement) &#x3D;&gt; trackedElement.id !&#x3D;&#x3D; element.id
+    );
+  }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'class';
+            var COMPODOC_CURRENT_PAGE_URL = 'NgcConfig.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="../js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="../js/menu-wc.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
