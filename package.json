@@ -14,7 +14,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run compodoc && git add docs/* && HUSKY_SKIP_HOOKS=1 git commit -m 'Generate docs'"
+      "pre-commit": "npm run compodoc && git add docs/*"
     }
   },
   "private": false,

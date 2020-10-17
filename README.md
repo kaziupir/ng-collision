@@ -10,6 +10,9 @@
 
 ### Generate docs
 
+Documentation is auto-generated every commit.
+
+You can also generate docs manually by:
 `npm run compodoc`
 
 ## Build
