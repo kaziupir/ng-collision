@@ -40,7 +40,29 @@ export class AngularCollisionService implements OnDestroy {
     this.trackedElementsPositionSubscription = this.trackedElementsPositions$
       .pipe(throttleTime(100))
       .subscribe((elementsMap: Map<number, NgcElementChange>) => {
-        elementsMap.forEach((element: NgcElementChange, id: number) => {});
+        // TODO work on performance
+        elementsMap.forEach((element: NgcElementChange, id: number) => {
+          const collisions: AngularCollisionDirective[] = [];
+
+          elementsMap.forEach(
+            (innerElement: NgcElementChange, innerId: number) => {
+              if (
+                id !== innerId &&
+                this.checkElementsCollision(
+                  element.domRect,
+                  innerElement.domRect
+                )
+              ) {
+                collisions.push(innerElement.element);
+              }
+            }
+          );
+
+          element.element.updateCollisionState(
+            collisions.length > 0,
+            collisions
+          );
+        });
       });
   }
 
@@ -88,6 +110,23 @@ export class AngularCollisionService implements OnDestroy {
     } else {
       this.removeTrackedElement(elements);
     }
+  }
+
+  /**
+   * Checks collisions between two elements
+   *
+   * @param first
+   * @param second
+   */
+  private checkElementsCollision(first: DOMRect, second: DOMRect): boolean {
+    return (
+      ((first.top <= second.bottom && first.top >= second.top) ||
+        (first.bottom <= second.bottom && first.bottom >= second.top) ||
+        (first.top <= second.top && first.bottom >= second.bottom)) &&
+      ((first.left >= second.left && first.left <= second.right) ||
+        (first.right <= second.right && first.right >= second.left) ||
+        (first.left <= second.left && first.right >= second.right))
+    );
   }
 
   /**

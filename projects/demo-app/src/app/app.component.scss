@@ -28,6 +28,8 @@
     background-color: #cde;
     top: 150px;
     left: 150px;
+    height: 100px;
+    width: 100px;
     animation: slide1 5s linear 1s infinite alternate;
   }
 
@@ -37,6 +39,10 @@
     left: 350px;
     animation: slide2 5s linear 1s infinite alternate;
   }
+}
+
+.collision {
+  border-color: red;
 }
 
 @keyframes slide1 {
@@ -73,11 +79,11 @@
   }
   50% {
     left: 200px;
-    top: 100px;
+    top: 150px;
   }
   75% {
     left: 300px;
-    top: 100px;
+    top: 150px;
   }
   100% {
     left: 300px;

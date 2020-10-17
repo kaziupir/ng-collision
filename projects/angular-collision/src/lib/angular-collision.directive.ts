@@ -20,7 +20,7 @@ export interface NgcElementChange {
 export interface NgcCollisionChange {
   id: number;
   active: boolean;
-  collidedIds: number[];
+  collidedElements: AngularCollisionDirective[];
 }
 
 @Directive({
@@ -71,9 +71,12 @@ export class AngularCollisionDirective
    * @param active
    * @param collidedIds
    */
-  public updateCollisionState(active: boolean, collidedIds: number[]): void {
+  public updateCollisionState(
+    active: boolean,
+    collidedElements: AngularCollisionDirective[]
+  ): void {
     this.collisionActive = active;
-    this.collisionActiveChange.emit({ id: this.id, active, collidedIds });
+    this.collisionActiveChange.emit({ id: this.id, active, collidedElements });
   }
 
   /**
