@@ -88,12 +88,10 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Public</span>
-                                    <span class="modifier">Optional</span>
                                 <a href="#disableInterval">disableInterval</a>
                             </li>
                             <li>
                                     <span class="modifier">Public</span>
-                                    <span class="modifier">Optional</span>
                                 <a href="#intervalTime">intervalTime</a>
                             </li>
                         </ul>
@@ -115,7 +113,7 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(disableInterval?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, intervalTime?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+<code>constructor(disableInterval: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/boolean" target="_blank">boolean</a>, intervalTime: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
                     </td>
                 </tr>
                         <tr>
@@ -145,7 +143,7 @@
                                                         </td>
                                                   
                                                     <td>
-                                                            Yes
+                                                            No
                                                     </td>
                                                     
                                                 </tr>
@@ -157,7 +155,7 @@
                                                         </td>
                                                   
                                                     <td>
-                                                            Yes
+                                                            No
                                                     </td>
                                                     
                                                 </tr>
@@ -183,7 +181,6 @@
                         <span class="name">
                             <b>
                                 <span class="modifier">Public</span>
-                                <span class="modifier">Optional</span>
                             disableInterval</b>
                             <a href="#disableInterval"><span class="icon ion-ios-link"></span></a>
                         </span>
@@ -195,12 +192,23 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>false</code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-collision/src/lib/models/ngc-config.model.ts:5</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="9" class="link-to-prism">projects/angular-collision/src/lib/models/ngc-config.model.ts:9</a></div>
                             </td>
                         </tr>
 
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Disable interval position checking</p>
+</div>
+                    </td>
+                </tr>
 
             </tbody>
         </table>
@@ -212,7 +220,6 @@
                         <span class="name">
                             <b>
                                 <span class="modifier">Public</span>
-                                <span class="modifier">Optional</span>
                             intervalTime</b>
                             <a href="#intervalTime"><span class="icon ion-ios-link"></span></a>
                         </span>
@@ -224,12 +231,23 @@
 
                         </td>
                     </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <i>Default value : </i><code>100</code>
+                        </td>
+                    </tr>
                         <tr>
                             <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="5" class="link-to-prism">projects/angular-collision/src/lib/models/ngc-config.model.ts:5</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">projects/angular-collision/src/lib/models/ngc-config.model.ts:13</a></div>
                             </td>
                         </tr>
 
+                <tr>
+                    <td class="col-md-4">
+                        <div class="io-description"><p>Interval time for position checking</p>
+</div>
+                    </td>
+                </tr>
 
             </tbody>
         </table>
@@ -246,7 +264,16 @@
 
     <div class="tab-pane fade  tab-source-code" id="c-source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export class NgcConfig {
-  constructor(public disableInterval?: boolean, public intervalTime?: number) {}
+  constructor(
+    /**
+     * Disable interval position checking
+     */
+    public disableInterval: boolean &#x3D; false,
+    /**
+     * Interval time for position checking
+     */
+    public intervalTime: number &#x3D; 100
+  ) {}
 }
 </code></pre>
     </div>

@@ -8,6 +8,8 @@ import {
   Input,
   HostBinding,
   Optional,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { timer, Subscription, Subject } from 'rxjs';
 import { NgcConfig } from './models/ngc-config.model';
@@ -34,7 +36,7 @@ export interface NgcCollisionChange {
   exportAs: 'ngcAngularCollision',
 })
 export class AngularCollisionDirective
-  implements AfterContentChecked, OnDestroy {
+  implements OnChanges, AfterContentChecked, OnDestroy {
   /**
    * Disable interval position checking
    */
@@ -81,16 +83,32 @@ export class AngularCollisionDirective
    */
   public collision: boolean;
 
-  private timerSubscription: Subscription;
-  private active: boolean = false;
-  private static uid: number = 0;
+  private _timerSubscription: Subscription;
+  private _active: boolean = false;
+  private _intervalTime: number;
+  private _disableInterval: boolean;
+  private static _uid: number = 0;
 
   constructor(public element: ElementRef, @Optional() config?: NgcConfig) {
-    this.id = AngularCollisionDirective.uid++;
+    this.id = AngularCollisionDirective._uid++;
+    if (config) {
+      this._intervalTime = config.intervalTime;
+      this._disableInterval = config.disableInterval;
+    }
+  }
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.intervalTime) {
+      this._intervalTime = changes.intervalTime.currentValue;
+    }
+
+    if (changes.disableInterval) {
+      this._disableInterval = changes.disableInterval.currentValue;
+    }
   }
 
   public ngAfterContentChecked(): void {
-    if (this.active) {
+    if (this._active) {
       this.checkPosition();
     }
   }
@@ -129,10 +147,10 @@ export class AngularCollisionDirective
    * Start tracking element
    */
   public startTracking(): void {
-    this.active = true;
+    this._active = true;
 
-    if (!this.disableInterval) {
-      this.timerSubscription = timer(0, this.intervalTime).subscribe(() => {
+    if (!this._disableInterval) {
+      this._timerSubscription = timer(0, this._intervalTime).subscribe(() => {
         this.checkPosition();
       });
     }
@@ -142,7 +160,7 @@ export class AngularCollisionDirective
    * Stop tracking element
    */
   public stopTracking(): void {
-    this.active = false;
+    this._active = false;
     this.updateCollisionState(false, []);
     this.unsubscribe();
   }
@@ -151,8 +169,8 @@ export class AngularCollisionDirective
    * Unsubscribe timer observable
    */
   public unsubscribe(): void {
-    if (this.timerSubscription && !this.timerSubscription.closed) {
-      this.timerSubscription.unsubscribe();
+    if (this._timerSubscription && !this._timerSubscription.closed) {
+      this._timerSubscription.unsubscribe();
     }
   }
 }

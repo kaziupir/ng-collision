@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, Optional, QueryList } from '@angular/core';
+import { Injectable, OnDestroy, QueryList } from '@angular/core';
 import { takeUntil, throttleTime } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
 import {
@@ -6,7 +6,6 @@ import {
   NgcElementChange,
 } from './angular-collision.directive';
 import { NgcTrackedElement } from './models/ngc-tracked-element.interface';
-import { NgcConfig } from './models/ngc-config.model';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +30,7 @@ export class AngularCollisionService implements OnDestroy {
 
   public trackedElementsPositionSubscription: Subscription;
 
-  constructor(@Optional() config?: NgcConfig) {
+  constructor() {
     this.trackedElementsPositionSubscription = this.trackedElementsPositions$
       .pipe(throttleTime(100))
       .subscribe((elementsMap: Map<number, NgcElementChange>) => {

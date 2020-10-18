@@ -129,6 +129,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Element id</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -158,6 +164,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Element changes observable subscription</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
             </section>
@@ -171,7 +183,14 @@
  * Tracked element in library service
  */
 export interface NgcTrackedElement {
+  /**
+   * Element id
+   */
   id: number;
+
+  /**
+   * Element changes observable subscription
+   */
   subscription: Subscription;
 }
 </code></pre>
