@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { AngularCollisionDirective } from './angular-collision.directive';
-import { NgcConfig } from './angular-collision.service';
+import { NgcConfig } from './models/ngc-config.model';
 
 @NgModule({
   declarations: [AngularCollisionDirective],

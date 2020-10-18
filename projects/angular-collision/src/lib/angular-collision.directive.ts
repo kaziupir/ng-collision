@@ -7,16 +7,22 @@ import {
   OnDestroy,
   Input,
   HostBinding,
+  Optional,
 } from '@angular/core';
 import { timer, Subscription, Subject } from 'rxjs';
+import { NgcConfig } from './models/ngc-config.model';
 
-// TODO: move to files
+/**
+ * Object containing changed element's domRect and element itself
+ */
 export interface NgcElementChange {
   domRect: DOMRect;
   element: AngularCollisionDirective;
 }
 
-// TODO: move to files
+/**
+ * Object with info about element's collisions
+ */
 export interface NgcCollisionChange {
   id: number;
   active: boolean;
@@ -29,28 +35,57 @@ export interface NgcCollisionChange {
 })
 export class AngularCollisionDirective
   implements AfterContentChecked, OnDestroy {
-  @Input() public disableInterval: boolean; // TODO add to config
-  @Input() public intervalTime: number = 100; // TODO add to config
-  @Input() public customEvents: string[];
+  /**
+   * Disable interval position checking
+   */
+  @Input() public disableInterval: boolean;
 
+  /**
+   * Interval time for position checking
+   */
+  @Input() public intervalTime: number = 100;
+
+  /**
+   * Element's position changes
+   */
   @Output() public rectangleChange: EventEmitter<
     NgcElementChange
   > = new EventEmitter();
+
+  /**
+   * Element's collision changes
+   */
   @Output() public collisionActiveChange: EventEmitter<
     NgcCollisionChange
   > = new EventEmitter();
 
-  @HostBinding('class.collision') public collisionActive: boolean;
+  @HostBinding('class.collision') private collisionActive: boolean;
 
+  /**
+   * Element's collision changes as observable, same as output
+   */
   public rectangleChange$: Subject<NgcElementChange> = new Subject();
+
+  /**
+   * Observable that emits on instance destroy
+   */
   public destroy$: Subject<number> = new Subject();
+
+  /**
+   * Unique id for directive instance
+   */
   public id: number;
+
+  /**
+   * True if element has any collision
+   */
+  public collision: boolean;
 
   private timerSubscription: Subscription;
   private active: boolean = false;
   private static uid: number = 0;
 
-  constructor(public element: ElementRef) {
+  constructor(public element: ElementRef, @Optional() config?: NgcConfig) {
     this.id = AngularCollisionDirective.uid++;
   }
 
@@ -76,6 +111,7 @@ export class AngularCollisionDirective
     collidedElements: AngularCollisionDirective[]
   ): void {
     this.collisionActive = active;
+    this.collision = active;
     this.collisionActiveChange.emit({ id: this.id, active, collidedElements });
   }
 

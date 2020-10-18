@@ -20,8 +20,8 @@
   &__one {
     background-color: #fee;
     z-index: 2;
-    top: 360px;
-    left: 330px;
+    top: 260px;
+    left: 360px;
   }
 
   &__two {
@@ -48,19 +48,19 @@
 @keyframes slide1 {
   0% {
     left: 150px;
-    top: 150px;
+    top: 50px;
   }
   25% {
     left: 400px;
-    top: 150px;
+    top: 50px;
   }
   50% {
     left: 400px;
-    top: 350px;
+    top: 250px;
   }
   75% {
     left: 100px;
-    top: 350px;
+    top: 250px;
   }
   100% {
     left: 100px;
@@ -71,22 +71,22 @@
 @keyframes slide2 {
   0% {
     left: 350px;
-    top: 350px;
+    top: 250px;
   }
   25% {
     left: 200px;
-    top: 350px;
+    top: 250px;
   }
   50% {
     left: 200px;
-    top: 150px;
+    top: 50px;
   }
   75% {
     left: 300px;
-    top: 150px;
+    top: 50px;
   }
   100% {
     left: 300px;
-    top: 300px;
+    top: 200px;
   }
 }

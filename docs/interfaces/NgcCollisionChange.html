@@ -64,6 +64,13 @@
             <code>projects/angular-collision/src/lib/angular-collision.directive.ts</code>
         </p>
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Object with info about element&#39;s collisions</p>
+
+            </p>
 
 
         <section>
@@ -199,16 +206,22 @@
   OnDestroy,
   Input,
   HostBinding,
+  Optional,
 } from &#x27;@angular/core&#x27;;
 import { timer, Subscription, Subject } from &#x27;rxjs&#x27;;
+import { NgcConfig } from &#x27;./models/ngc-config.model&#x27;;
 
-// TODO: move to files
+/**
+ * Object containing changed element&#x27;s domRect and element itself
+ */
 export interface NgcElementChange {
   domRect: DOMRect;
   element: AngularCollisionDirective;
 }
 
-// TODO: move to files
+/**
+ * Object with info about element&#x27;s collisions
+ */
 export interface NgcCollisionChange {
   id: number;
   active: boolean;
@@ -221,28 +234,57 @@ export interface NgcCollisionChange {
 })
 export class AngularCollisionDirective
   implements AfterContentChecked, OnDestroy {
-  @Input() public disableInterval: boolean; // TODO add to config
-  @Input() public intervalTime: number &#x3D; 100; // TODO add to config
-  @Input() public customEvents: string[];
+  /**
+   * Disable interval position checking
+   */
+  @Input() public disableInterval: boolean;
 
+  /**
+   * Interval time for position checking
+   */
+  @Input() public intervalTime: number &#x3D; 100;
+
+  /**
+   * Element&#x27;s position changes
+   */
   @Output() public rectangleChange: EventEmitter&lt;
     NgcElementChange
   &gt; &#x3D; new EventEmitter();
+
+  /**
+   * Element&#x27;s collision changes
+   */
   @Output() public collisionActiveChange: EventEmitter&lt;
     NgcCollisionChange
   &gt; &#x3D; new EventEmitter();
 
-  @HostBinding(&#x27;class.collision&#x27;) public collisionActive: boolean;
+  @HostBinding(&#x27;class.collision&#x27;) private collisionActive: boolean;
 
+  /**
+   * Element&#x27;s collision changes as observable, same as output
+   */
   public rectangleChange$: Subject&lt;NgcElementChange&gt; &#x3D; new Subject();
+
+  /**
+   * Observable that emits on instance destroy
+   */
   public destroy$: Subject&lt;number&gt; &#x3D; new Subject();
+
+  /**
+   * Unique id for directive instance
+   */
   public id: number;
+
+  /**
+   * True if element has any collision
+   */
+  public collision: boolean;
 
   private timerSubscription: Subscription;
   private active: boolean &#x3D; false;
   private static uid: number &#x3D; 0;
 
-  constructor(public element: ElementRef) {
+  constructor(public element: ElementRef, @Optional() config?: NgcConfig) {
     this.id &#x3D; AngularCollisionDirective.uid++;
   }
 
@@ -268,6 +310,7 @@ export class AngularCollisionDirective
     collidedElements: AngularCollisionDirective[]
   ): void {
     this.collisionActive &#x3D; active;
+    this.collision &#x3D; active;
     this.collisionActiveChange.emit({ id: this.id, active, collidedElements });
   }
 

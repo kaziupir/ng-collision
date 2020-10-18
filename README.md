@@ -8,7 +8,7 @@
 
 `ng serve demo-app`
 
-Drag & drop made with [angular/cdk](https://material.angular.io/cdk/drag-drop/overview).
+Drag & drop made with [angular/cdk](https://material.angular.io/cdk/drag-drop/overview). Not a part of library.
 
 ### Generate docs
 

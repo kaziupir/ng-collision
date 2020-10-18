@@ -5,20 +5,15 @@ import {
   AngularCollisionDirective,
   NgcElementChange,
 } from './angular-collision.directive';
-
-export class NgcConfig {}
-
-export interface NgcTrackedElement {
-  id: number;
-  subscription: Subscription;
-}
+import { NgcTrackedElement } from './models/ngc-tracked-element.interface';
+import { NgcConfig } from './models/ngc-config.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AngularCollisionService implements OnDestroy {
   /**
-   *  Tracked elements ids
+   *  Tracked elements
    */
   public trackedElements: NgcTrackedElement[] = [];
 
