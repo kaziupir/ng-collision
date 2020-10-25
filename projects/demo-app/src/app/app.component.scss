@@ -1,11 +1,16 @@
-:host {
+.wrapper {
   text-align: center;
+  background-color: #00bcd4;
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: absolute;
 }
 
 .rect {
   width: 150px;
   height: 150px;
-  border: 2px solid black;
+  border: 2px solid transparent;
   position: relative;
   opacity: 0.8;
   border-radius: 5px;
@@ -18,24 +23,24 @@
   cursor: move;
 
   &__one {
-    background-color: #fee;
+    background-color: #b3e5fc;
     z-index: 2;
     top: 260px;
     left: 360px;
   }
 
   &__two {
-    background-color: #cde;
-    top: 150px;
+    background-color: #009688;
+    top: 50px;
     left: 150px;
-    height: 100px;
-    width: 100px;
+    height: 110px;
+    width: 110px;
     animation: slide1 5s linear 1s infinite alternate;
   }
 
   &__three {
-    background-color: #fda;
-    top: 350px;
+    background-color: #7c4dff;
+    top: 250px;
     left: 350px;
     animation: slide2 5s linear 1s infinite alternate;
   }

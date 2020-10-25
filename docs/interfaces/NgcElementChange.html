@@ -178,7 +178,7 @@
   OnChanges,
   SimpleChanges,
 } from &#x27;@angular/core&#x27;;
-import { timer, Subscription, Subject } from &#x27;rxjs&#x27;;
+import { timer, Subscription, Subject, Observable } from &#x27;rxjs&#x27;;
 import { NgcConfig } from &#x27;./models/ngc-config.model&#x27;;
 
 /**
@@ -250,6 +250,12 @@ export class AngularCollisionDirective
    */
   public collision: boolean;
 
+  /**
+   * Observable of collision value
+   */
+  public collision$: Observable&lt;boolean&gt;;
+
+  private _collision$: Subject&lt;boolean&gt; &#x3D; new Subject();
   private _timerSubscription: Subscription;
   private _active: boolean &#x3D; false;
   private _intervalTime: number;
@@ -258,6 +264,8 @@ export class AngularCollisionDirective
 
   constructor(public element: ElementRef, @Optional() config?: NgcConfig) {
     this.id &#x3D; AngularCollisionDirective._uid++;
+    this.collision$ &#x3D; this._collision$.asObservable();
+
     if (config) {
       this._intervalTime &#x3D; config.intervalTime;
       this._disableInterval &#x3D; config.disableInterval;
@@ -295,9 +303,17 @@ export class AngularCollisionDirective
     active: boolean,
     collidedElements: AngularCollisionDirective[]
   ): void {
-    this.collisionActive &#x3D; active;
-    this.collision &#x3D; active;
-    this.collisionActiveChange.emit({ id: this.id, active, collidedElements });
+    // Fix for ExpressionChangedAfterItHasBeenCheckedError
+    Promise.resolve().then(() &#x3D;&gt; {
+      this.collisionActive &#x3D; active;
+      this.collision &#x3D; active;
+      this._collision$.next(active);
+      this.collisionActiveChange.emit({
+        id: this.id,
+        active,
+        collidedElements,
+      });
+    });
   }
 
   /**

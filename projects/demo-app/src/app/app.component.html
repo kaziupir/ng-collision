@@ -1,25 +1,29 @@
-<h1>NgCollision Demo</h1>
-<div
-  *ngFor="let rectangle of rectangles"
-  class="rect rect__{{ rectangle.name }}"
-  cdkDrag
-  ngcAngularCollision
-  (rectangleChange)="handleRectChange($event, rectangle.name)"
->
-  <span>Drag me</span>
-  <ng-container
-    *ngTemplateOutlet="
-      positionTemplate;
-      context: { $implicit: rectangle.position }
-    "
-  ></ng-container>
-</div>
-
-<ng-template #positionTemplate let-position>
-  <div *ngIf="position">
-    <div>X: {{ position.x | number: '1.0-0' }}px</div>
-    <div>Y: {{ position.y | number: '1.0-0' }}px</div>
-    <div>W: {{ position.width | number: '1.0-0' }}px</div>
-    <div>H: {{ position.height | number: '1.0-0' }}px</div>
+<div class="wrapper">
+  <h1>NgCollision Demo</h1>
+  <div
+    *ngFor="let rectangle of rectangles"
+    class="rect rect__{{ rectangle.name }}"
+    cdkDrag
+    ngcAngularCollision
+    #directiveRef="ngcAngularCollision"
+    (rectangleChange)="handleRectChange($event, rectangle.name)"
+    (collisionActiveChange)="handleCollisionActiveChange($event)"
+  >
+    <span>Drag me ({{ directiveRef.collision$ | async }})</span>
+    <ng-container
+      *ngTemplateOutlet="
+        positionTemplate;
+        context: { $implicit: rectangle.position }
+      "
+    ></ng-container>
   </div>
-</ng-template>
+
+  <ng-template #positionTemplate let-position>
+    <div *ngIf="position">
+      <div>X: {{ position.x | number: '1.0-0' }}px</div>
+      <div>Y: {{ position.y | number: '1.0-0' }}px</div>
+      <div>W: {{ position.width | number: '1.0-0' }}px</div>
+      <div>H: {{ position.height | number: '1.0-0' }}px</div>
+    </div>
+  </ng-template>
+</div>

@@ -4,7 +4,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AngularCollisionModule } from 'projects/angular-collision/src/public-api';
+import {
+  AngularCollisionModule,
+  NgcConfig,
+} from 'projects/angular-collision/src/public-api';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
@@ -12,11 +15,10 @@ import { CommonModule } from '@angular/common';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AngularCollisionModule,
+    AngularCollisionModule.forRoot(new NgcConfig(true, 0)),
     DragDropModule,
     CommonModule,
   ],
-  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -11,7 +11,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import { timer, Subscription, Subject } from 'rxjs';
+import { timer, Subscription, Subject, Observable } from 'rxjs';
 import { NgcConfig } from './models/ngc-config.model';
 
 /**
@@ -83,6 +83,12 @@ export class AngularCollisionDirective
    */
   public collision: boolean;
 
+  /**
+   * Observable of collision value
+   */
+  public collision$: Observable<boolean>;
+
+  private _collision$: Subject<boolean> = new Subject();
   private _timerSubscription: Subscription;
   private _active: boolean = false;
   private _intervalTime: number;
@@ -91,6 +97,8 @@ export class AngularCollisionDirective
 
   constructor(public element: ElementRef, @Optional() config?: NgcConfig) {
     this.id = AngularCollisionDirective._uid++;
+    this.collision$ = this._collision$.asObservable();
+
     if (config) {
       this._intervalTime = config.intervalTime;
       this._disableInterval = config.disableInterval;
@@ -128,9 +136,17 @@ export class AngularCollisionDirective
     active: boolean,
     collidedElements: AngularCollisionDirective[]
   ): void {
-    this.collisionActive = active;
-    this.collision = active;
-    this.collisionActiveChange.emit({ id: this.id, active, collidedElements });
+    // Fix for ExpressionChangedAfterItHasBeenCheckedError
+    Promise.resolve().then(() => {
+      this.collisionActive = active;
+      this.collision = active;
+      this._collision$.next(active);
+      this.collisionActiveChange.emit({
+        id: this.id,
+        active,
+        collidedElements,
+      });
+    });
   }
 
   /**

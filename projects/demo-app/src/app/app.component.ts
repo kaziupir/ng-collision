@@ -7,6 +7,7 @@ import {
 import { AngularCollisionService } from 'projects/angular-collision/src/lib/angular-collision.service';
 import {
   AngularCollisionDirective,
+  NgcCollisionChange,
   NgcElementChange,
 } from 'projects/angular-collision/src/lib/angular-collision.directive';
 
@@ -31,6 +32,8 @@ export class AppComponent implements AfterViewInit {
     AngularCollisionDirective
   >;
 
+  public collisions: Map<number, NgcCollisionChange> = new Map();
+
   public rectangles: Rectangle[] = [
     {
       name: RectanglesEnum.ONE,
@@ -49,6 +52,7 @@ export class AppComponent implements AfterViewInit {
   constructor(public service: AngularCollisionService) {}
 
   public ngAfterViewInit(): void {
+    // Register elements for collision detection
     this.service.register(this.elements);
   }
 
@@ -56,8 +60,16 @@ export class AppComponent implements AfterViewInit {
     position: NgcElementChange,
     rectangleName: RectanglesEnum
   ): void {
+    // Handle position changes
+
     this.rectangles.find(
       (rectangle) => rectangle.name === rectangleName
     ).position = position.domRect;
+  }
+
+  public handleCollisionActiveChange(change: NgcCollisionChange): void {
+    // Handle collisions
+
+    this.collisions.set(change.id, change);
   }
 }
