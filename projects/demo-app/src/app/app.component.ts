@@ -4,12 +4,12 @@ import {
   QueryList,
   AfterViewInit,
 } from '@angular/core';
-import { AngularCollisionService } from 'projects/angular-collision/src/lib/angular-collision.service';
 import {
+  AngularCollisionService,
   AngularCollisionDirective,
   NgcCollisionChange,
   NgcElementChange,
-} from 'projects/angular-collision/src/lib/angular-collision.directive';
+} from 'angular-collision';
 
 interface Rectangle {
   name: RectanglesEnum;
