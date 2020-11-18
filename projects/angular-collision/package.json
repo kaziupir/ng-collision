@@ -1,6 +1,8 @@
 {
   "name": "angular-collision",
   "version": "1.0.0",
+  "license": "MIT",
+  "author": "Michał Kazimierczak (kaziupir@github)",
   "peerDependencies": {
     "@angular/common": "^10.1.5",
     "@angular/core": "^10.1.5"
