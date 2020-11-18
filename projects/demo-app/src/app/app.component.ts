@@ -54,6 +54,15 @@ export class AppComponent implements AfterViewInit {
   public ngAfterViewInit(): void {
     // Register elements for collision detection
     this.service.register(this.elements);
+
+    setTimeout(() => {
+      this.stopTrackingFirstElement();
+    }, 10000);
+  }
+
+  public stopTrackingFirstElement(): void {
+    // Remove first element from tracking
+    this.service.remove(this.elements.first);
   }
 
   public handleRectChange(
@@ -61,7 +70,6 @@ export class AppComponent implements AfterViewInit {
     rectangleName: RectanglesEnum
   ): void {
     // Handle position changes
-
     this.rectangles.find(
       (rectangle) => rectangle.name === rectangleName
     ).position = position.domRect;
@@ -69,7 +77,6 @@ export class AppComponent implements AfterViewInit {
 
   public handleCollisionActiveChange(change: NgcCollisionChange): void {
     // Handle collisions
-
     this.collisions.set(change.id, change);
   }
 }

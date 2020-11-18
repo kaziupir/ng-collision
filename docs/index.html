@@ -33,7 +33,126 @@
 <h1 id="ngcollision">NgCollision</h1>
 <h3 id="angular-10-library-for-elements-collision-detection">Angular 10 library for elements collision detection</h3>
 <p><a href="https://kaziupir.github.io/ng-collision/index.html">Auto-generated documentation</a></p>
-<h3 id="running-demo-app">Running demo app</h3>
+<h3 id="example">Example</h3>
+<ul>
+<li>Module (add <code>AngularCollisionModule</code> to imports, <code>forRoot</code> is optional to pass config - in this case disable interval collision checking)</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-none">&#64;NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    AngularCollisionModule.forRoot(new NgcConfig(true)),
+    CommonModule,
+  ],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}</code></pre></div><ul>
+<li>Template (add <code>ngcAngularCollision</code> directive to any element)</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-none">  &lt;div
+    *ngFor=&quot;let rectangle of rectangles&quot;
+    class=&quot;rect&quot;
+    ngcAngularCollision
+    #directiveRef=&quot;ngcAngularCollision&quot;
+    (rectangleChange)=&quot;handleRectChange($event, rectangle.name)&quot;
+    (collisionActiveChange)=&quot;handleCollisionActiveChange($event)&quot;
+  &gt;
+    &lt;span&gt;Example element ({{ directiveRef.collision$ | async }})&lt;/span&gt;
+      &lt;div *ngIf=&quot;rectangle.position&quot;&gt;
+        &lt;div&gt;X: {{ position.x | number: &#39;1.0-0&#39; }}px&lt;/div&gt;
+        &lt;div&gt;Y: {{ position.y | number: &#39;1.0-0&#39; }}px&lt;/div&gt;
+        &lt;div&gt;W: {{ position.width | number: &#39;1.0-0&#39; }}px&lt;/div&gt;
+        &lt;div&gt;H: {{ position.height | number: &#39;1.0-0&#39; }}px&lt;/div&gt;
+      &lt;/div&gt;
+  &lt;/div&gt;</code></pre></div><ul>
+<li>SCSS (class <code>collision</code> is applied by directive to host element)</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-none">.collision {
+  border-color: red;
+}
+
+.rect {
+  width: 150px;
+  height: 150px;
+  border: 2px solid transparent;
+  position: relative;
+
+
+  &amp;__one {
+    top: 100px;
+    left: 100px;
+  }
+
+  &amp;__two {
+    top: 50px;
+    left: 150px;
+  }
+
+   &amp;__three {
+    top: 250px;
+    left: 300px;
+   }
+}</code></pre></div><ul>
+<li>Component (register elements to collision checking with <code>AngularCollisionService</code>)</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-none">&#64;Component({
+  selector: &#39;app-root&#39;,
+  templateUrl: &#39;./app.component.html&#39;,
+  styleUrls: [&#39;./app.component.scss&#39;],
+})
+export class AppComponent implements AfterViewInit {
+  &#64;ViewChildren(AngularCollisionDirective) elements: QueryList&lt;
+    AngularCollisionDirective
+  &gt;;
+
+  public collisions: Map&lt;number, NgcCollisionChange&gt; = new Map();
+
+  public rectangles: Array&lt;{ name: string, position: DOMRect }&gt; = [
+    {
+      name: &#39;one,
+      position: null,
+    },
+    {
+      name: &#39;two&#39;,
+      position: null,
+    },
+    {
+      name: &#39;three&#39;,
+      position: null,
+    },
+  ];
+
+  constructor(public service: AngularCollisionService) {}
+
+  public ngAfterViewInit(): void {
+    // Register elements for collision detection
+    this.service.register(this.elements);
+
+    setTimeout(() =&gt; {
+      this.stopTrackingFirstElement();
+    }, 10000);
+  }
+
+  public stopTrackingFirstElement(): void {
+    // Remove first element from tracking
+    this.service.remove(this.elements.first);
+  }
+
+  public handleRectChange(
+    position: NgcElementChange,
+    rectangleName: RectanglesEnum
+  ): void {
+    // Handle position changes
+    this.rectangles.find(
+      (rectangle) =&gt; rectangle.name === rectangleName
+    ).position = position.domRect;
+  }
+
+  public handleCollisionActiveChange(change: NgcCollisionChange): void {
+    // Handle collisions
+    this.collisions.set(change.id, change);
+  }
+}</code></pre></div><h3 id="running-demo-app">Running demo app</h3>
 <p><code>ng serve demo-app</code></p>
 <p>Drag &amp; drop made with <a href="https://material.angular.io/cdk/drag-drop/overview">angular/cdk</a>. Not a part of library.</p>
 <h3 id="generate-docs">Generate docs</h3>

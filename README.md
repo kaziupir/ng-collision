@@ -5,7 +5,7 @@
 [Auto-generated documentation](https://kaziupir.github.io/ng-collision/index.html)
 
 ### Example
- 
+
 - Module (add `AngularCollisionModule` to imports, `forRoot` is optional to pass config - in this case disable interval collision checking)
 
 ```
@@ -20,7 +20,6 @@
 })
 export class AppModule {}
 ```
-
 
 - Template (add `ngcAngularCollision` directive to any element)
 
@@ -66,14 +65,13 @@ export class AppModule {}
     top: 50px;
     left: 150px;
   }
-  
+
    &__three {
     top: 250px;
     left: 300px;
    }
 }
 ```
-
 
 - Component (register elements to collision checking with `AngularCollisionService`)
 
@@ -118,7 +116,7 @@ export class AppComponent implements AfterViewInit {
 
   public stopTrackingFirstElement(): void {
     // Remove first element from tracking
-    this.service.remove(this.elements[0]);
+    this.service.remove(this.elements.first);
   }
 
   public handleRectChange(

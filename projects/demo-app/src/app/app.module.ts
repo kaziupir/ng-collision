@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AngularCollisionModule.forRoot(new NgcConfig(true, 0)),
+    AngularCollisionModule.forRoot(new NgcConfig(true)),
     DragDropModule,
     CommonModule,
   ],
