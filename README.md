@@ -90,17 +90,17 @@ export class AppComponent implements AfterViewInit {
 
   public collisions: Map<number, NgcCollisionChange> = new Map();
 
-  public rectangles: Rectangle[] = [
+  public rectangles: Array<{ name: string, position: DOMRect }> = [
     {
-      name: RectanglesEnum.ONE,
+      name: 'one,
       position: null,
     },
     {
-      name: RectanglesEnum.TWO,
+      name: 'two',
       position: null,
     },
     {
-      name: RectanglesEnum.THREE,
+      name: 'three',
       position: null,
     },
   ];
