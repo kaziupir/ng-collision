@@ -15,6 +15,8 @@ npm i angular-collision
 - Module (add `AngularCollisionModule` to imports, `forRoot` is optional to pass config - in this case disable interval collision checking)
 
 ```
+import { AngularCollisionModule, NgcConfig } from 'angular-collision';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -82,6 +84,13 @@ export class AppModule {}
 - Component (register elements to collision checking with `AngularCollisionService`)
 
 ```
+import {
+  AngularCollisionService,
+  AngularCollisionDirective,
+  NgcCollisionChange,
+  NgcElementChange,
+} from 'angular-collision';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

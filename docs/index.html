@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>angular-collision documentation</title>
+        <title>angular-collision-demo documentation</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,7 +13,7 @@
     <body>
 
         <div class="navbar navbar-default navbar-fixed-top visible-xs">
-            <a href="./" class="navbar-brand">angular-collision documentation</a>
+            <a href="./" class="navbar-brand">angular-collision-demo documentation</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -40,7 +40,9 @@
 <div><pre class="line-numbers"><code class="language-none">npm i angular-collision</code></pre></div><ul>
 <li>Module (add <code>AngularCollisionModule</code> to imports, <code>forRoot</code> is optional to pass config - in this case disable interval collision checking)</li>
 </ul>
-<div><pre class="line-numbers"><code class="language-none">&#64;NgModule({
+<div><pre class="line-numbers"><code class="language-none">import { AngularCollisionModule, NgcConfig } from &#39;angular-collision&#39;;
+
+&#64;NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
@@ -98,7 +100,14 @@ export class AppModule {}</code></pre></div><ul>
 }</code></pre></div><ul>
 <li>Component (register elements to collision checking with <code>AngularCollisionService</code>)</li>
 </ul>
-<div><pre class="line-numbers"><code class="language-none">&#64;Component({
+<div><pre class="line-numbers"><code class="language-none">import {
+  AngularCollisionService,
+  AngularCollisionDirective,
+  NgcCollisionChange,
+  NgcElementChange,
+} from &#39;angular-collision&#39;;
+
+&#64;Component({
   selector: &#39;app-root&#39;,
   templateUrl: &#39;./app.component.html&#39;,
   styleUrls: [&#39;./app.component.scss&#39;],
