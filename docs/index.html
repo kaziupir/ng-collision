@@ -1,0 +1,236 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>ng-collision documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+	      <link rel="stylesheet" href="./styles/style.css">
+    </head>
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top visible-xs">
+            <a href="./" class="navbar-brand">ng-collision documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content getting-started">
+                   <div class="content-data">
+
+<h1 id="ngcollision">NgCollision</h1>
+<h3 id="angular-10-library-for-elements-collision-detection">Angular 10 library for elements collision detection</h3>
+<p><a href="https://kaziupir.github.io/ng-collision/index.html">Auto-generated documentation</a></p>
+<h3 id="example">Example</h3>
+<ul>
+<li>Module (add <code>AngularCollisionModule</code> to imports, <code>forRoot</code> is optional to pass config - in this case disable interval collision checking)</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-none">&#64;NgModule({
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    AngularCollisionModule.forRoot(new NgcConfig(true)),
+    CommonModule,
+  ],
+  bootstrap: [AppComponent],
+})
+export class AppModule {}</code></pre></div><ul>
+<li>Template (add <code>ngcAngularCollision</code> directive to any element)</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-none">  &lt;div
+    *ngFor=&quot;let rectangle of rectangles&quot;
+    class=&quot;rect&quot;
+    ngcAngularCollision
+    #directiveRef=&quot;ngcAngularCollision&quot;
+    (rectangleChange)=&quot;handleRectChange($event, rectangle.name)&quot;
+    (collisionActiveChange)=&quot;handleCollisionActiveChange($event)&quot;
+  &gt;
+    &lt;span&gt;Example element ({{ directiveRef.collision$ | async }})&lt;/span&gt;
+      &lt;div *ngIf=&quot;rectangle.position&quot;&gt;
+        &lt;div&gt;X: {{ position.x | number: &#39;1.0-0&#39; }}px&lt;/div&gt;
+        &lt;div&gt;Y: {{ position.y | number: &#39;1.0-0&#39; }}px&lt;/div&gt;
+        &lt;div&gt;W: {{ position.width | number: &#39;1.0-0&#39; }}px&lt;/div&gt;
+        &lt;div&gt;H: {{ position.height | number: &#39;1.0-0&#39; }}px&lt;/div&gt;
+      &lt;/div&gt;
+  &lt;/div&gt;</code></pre></div><ul>
+<li>SCSS (class <code>collision</code> is applied by directive to host element)</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-none">.collision {
+  border-color: red;
+}
+
+.rect {
+  width: 150px;
+  height: 150px;
+  border: 2px solid transparent;
+  position: relative;
+
+
+  &amp;__one {
+    top: 100px;
+    left: 100px;
+  }
+
+  &amp;__two {
+    top: 50px;
+    left: 150px;
+  }
+
+   &amp;__three {
+    top: 250px;
+    left: 300px;
+   }
+}</code></pre></div><ul>
+<li>Component (register elements to collision checking with <code>AngularCollisionService</code>)</li>
+</ul>
+<div><pre class="line-numbers"><code class="language-none">&#64;Component({
+  selector: &#39;app-root&#39;,
+  templateUrl: &#39;./app.component.html&#39;,
+  styleUrls: [&#39;./app.component.scss&#39;],
+})
+export class AppComponent implements AfterViewInit {
+  &#64;ViewChildren(AngularCollisionDirective) elements: QueryList&lt;
+    AngularCollisionDirective
+  &gt;;
+
+  public collisions: Map&lt;number, NgcCollisionChange&gt; = new Map();
+
+  public rectangles: Array&lt;{ name: string, position: DOMRect }&gt; = [
+    {
+      name: &#39;one,
+      position: null,
+    },
+    {
+      name: &#39;two&#39;,
+      position: null,
+    },
+    {
+      name: &#39;three&#39;,
+      position: null,
+    },
+  ];
+
+  constructor(public service: AngularCollisionService) {}
+
+  public ngAfterViewInit(): void {
+    // Register elements for collision detection
+    this.service.register(this.elements);
+
+    setTimeout(() =&gt; {
+      this.stopTrackingFirstElement();
+    }, 10000);
+  }
+
+  public stopTrackingFirstElement(): void {
+    // Remove first element from tracking
+    this.service.remove(this.elements.first);
+  }
+
+  public handleRectChange(
+    position: NgcElementChange,
+    rectangleName: RectanglesEnum
+  ): void {
+    // Handle position changes
+    this.rectangles.find(
+      (rectangle) =&gt; rectangle.name === rectangleName
+    ).position = position.domRect;
+  }
+
+  public handleCollisionActiveChange(change: NgcCollisionChange): void {
+    // Handle collisions
+    this.collisions.set(change.id, change);
+  }
+}</code></pre></div><h3 id="running-demo-app">Running demo app</h3>
+<p><code>ng serve demo-app</code></p>
+<p>Drag &amp; drop made with <a href="https://material.angular.io/cdk/drag-drop/overview">angular/cdk</a>. Not a part of library.</p>
+<h3 id="generate-docs">Generate docs</h3>
+<p>Documentation is auto-generated every commit.</p>
+<p>You can also generate docs manually by:
+<code>npm run compodoc</code></p>
+<h2 id="build">Build</h2>
+<p>Run <code>ng build</code> to build the project. The build artifacts will be stored in the <code>dist/</code> directory. Use the <code>--prod</code> flag for a production build.</p>
+<h2 id="running-unit-tests">Running unit tests</h2>
+<p>Run <code>ng test</code> to execute the unit tests via <a href="https://karma-runner.github.io">Karma</a>.</p>
+<h2 id="running-end-to-end-tests">Running end-to-end tests</h2>
+<p>Run <code>ng e2e</code> to execute the end-to-end tests via <a href="http://www.protractortest.org/">Protractor</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> result-matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 0;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'getting-started';
+            var COMPODOC_CURRENT_PAGE_URL = 'index.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="./js/libs/custom-elements.min.js"></script>
+       <script src="./js/libs/lit-html.js"></script>
+       <!-- Required to polyfill modern browsers as code is ES5 for IE... -->
+       <script src="./js/libs/custom-elements-es5-adapter.js" charset="utf-8" defer></script>
+       <script src="./js/menu-wc.js" defer></script>
+
+       <script src="./js/libs/bootstrap-native.js"></script>
+
+       <script src="./js/libs/es6-shim.min.js"></script>
+       <script src="./js/libs/EventDispatcher.js"></script>
+       <script src="./js/libs/promise.min.js"></script>
+       <script src="./js/libs/zepto.min.js"></script>
+
+       <script src="./js/compodoc.js"></script>
+
+       <script src="./js/tabs.js"></script>
+       <script src="./js/menu.js"></script>
+       <script src="./js/libs/clipboard.min.js"></script>
+       <script src="./js/libs/prism.js"></script>
+       <script src="./js/sourceCode.js"></script>
+          <script src="./js/search/search.js"></script>
+          <script src="./js/search/lunr.min.js"></script>
+          <script src="./js/search/search-lunr.js"></script>
+          <script src="./js/search/search_index.js"></script>
+       <script src="./js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
