@@ -6,6 +6,12 @@
 
 ### Example
 
+- Install
+
+```
+npm i angular-collision
+```
+
 - Module (add `AngularCollisionModule` to imports, `forRoot` is optional to pass config - in this case disable interval collision checking)
 
 ```
