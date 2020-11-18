@@ -75,7 +75,7 @@ export class AppModule {}
 ```
 
 
-- Component
+- Component (register elements to collision checking with `AngularCollisionService`)
 
 ```
 @Component({
