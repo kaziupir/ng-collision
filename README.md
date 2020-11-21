@@ -2,6 +2,8 @@
 
 ### Angular 10 library for elements collision detection
 
+[Demo app](https://angular-collision-demo.web.app/)
+
 [Auto-generated documentation](https://kaziupir.github.io/ng-collision/index.html)
 
 ### Example
